@@ -72,6 +72,16 @@ public class Ada {
                     }
                 } else if (userInput.equals("bye")) {
                     break;
+                } else if (userInput.startsWith("delete ")) {
+                    int taskNumber = Integer.parseInt(userInput.substring(7)) - 1;
+                    if (taskNumber >= 0 && taskNumber < tasks.size()) {
+                        Task removedTask = tasks.remove(taskNumber);
+                        System.out.println("Noted. I've removed this task:\n"
+                            + removedTask.toString() + "\n"
+                            + "Now you have " + tasks.size() + " tasks in the list.");
+                    } else {
+                        throw new AdaException("Invalid task number.");
+                    }
                 }
                 else {
                     throw new AdaException("I'm sorry, but I don't know what that means.");
