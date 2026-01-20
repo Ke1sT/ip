@@ -29,14 +29,19 @@ public class Ada {
                 if (taskNumber >= 0 && taskNumber < tasks.size()) {
                     tasks.get(taskNumber).markAsDone();
                     System.out.println("Nice! I've marked this task as done:\n");
-                    System.out.println("  [" + tasks.get(taskNumber).getStatusIcon() + "] " + tasks.get(taskNumber).toString());
+                    System.out.println(tasks.get(taskNumber).toString());
                 } else {
                     System.out.println("Invalid task number.");
                 }
             } else if (userInput.equals("unmark ")) {
-                System.out.println("OK, I've marked this task as not done yet:\n");
                 int taskNumber = Integer.parseInt(userInput.substring(7)) - 1;
-                System.out.println("  [" + tasks.get(taskNumber).getStatusIcon() + "] " + tasks.get(taskNumber).toString());
+                if (taskNumber >= 0 && taskNumber < tasks.size()) {
+                    tasks.get(taskNumber).unmarkAsDone();
+                    System.out.println("OK, I've marked this task as not done yet:\n");
+                    System.out.println(tasks.get(taskNumber).toString());
+                } else {
+                    System.out.println("Invalid task number.");
+                }
             } else {
                 System.err.println("added: " + userInput);
                 tasks.add(new Task(userInput));
