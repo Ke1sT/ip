@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Ada {
@@ -13,11 +14,21 @@ public class Ada {
 
         Scanner scanner = new Scanner(System.in);
         String userInput;
+        ArrayList<String> savedInput = new ArrayList<>();
+
         do {
             userInput = scanner.nextLine();
-            System.out.println(userInput
-            + "____________________________________________________________\n");
-        } while (!userInput.equalsIgnoreCase("bye"));
+            if (userInput.equals("list")) {
+                for (int i = 0; i < savedInput.size(); i++) {
+                    System.out.println((i + 1) + ". " + savedInput.get(i));
+                }
+            } else {
+                System.err.println("added: " + userInput);
+                savedInput.add(userInput);
+            }
+        } while (!userInput.equals("bye"));
+
+        
         System.out.println(GoodbyeString);
         scanner.close();
         
