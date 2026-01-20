@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Ada {
     public static void main(String[] args) {
         
@@ -7,6 +9,17 @@ public class Ada {
                 + "____________________________________________________________\n";
         String GoodbyeString = "Bye. Hope to see you again soon!\n"
                 + "____________________________________________________________\n";
-        System.out.println(WelcomeString + GoodbyeString);
+        System.out.println(WelcomeString);
+
+        Scanner scanner = new Scanner(System.in);
+        String userInput;
+        do {
+            userInput = scanner.nextLine();
+            System.out.println(userInput
+            + "____________________________________________________________\n");
+        } while (!userInput.equalsIgnoreCase("bye"));
+        System.out.println(GoodbyeString);
+        scanner.close();
+        
     }
 }
