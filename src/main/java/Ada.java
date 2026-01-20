@@ -14,17 +14,32 @@ public class Ada {
 
         Scanner scanner = new Scanner(System.in);
         String userInput;
-        ArrayList<String> savedInput = new ArrayList<>();
+        ArrayList<Task> tasks = new ArrayList<>();
 
         do {
             userInput = scanner.nextLine();
             if (userInput.equals("list")) {
-                for (int i = 0; i < savedInput.size(); i++) {
-                    System.out.println((i + 1) + ". " + savedInput.get(i));
+                for (int i = 0; i < tasks.size(); i++) {
+                    System.out.println((i + 1) + "."
+                    + "["  + tasks.get(i).getStatusIcon() + "] "
+                    + tasks.get(i).toString());
                 }
+            } else if (userInput.startsWith("mark ")) {
+                int taskNumber = Integer.parseInt(userInput.substring(5)) - 1;
+                if (taskNumber >= 0 && taskNumber < tasks.size()) {
+                    tasks.get(taskNumber).markAsDone();
+                    System.out.println("Nice! I've marked this task as done:\n");
+                    System.out.println("  [" + tasks.get(taskNumber).getStatusIcon() + "] " + tasks.get(taskNumber).toString());
+                } else {
+                    System.out.println("Invalid task number.");
+                }
+            } else if (userInput.equals("unmark ")) {
+                System.out.println("OK, I've marked this task as not done yet:\n");
+                int taskNumber = Integer.parseInt(userInput.substring(7)) - 1;
+                System.out.println("  [" + tasks.get(taskNumber).getStatusIcon() + "] " + tasks.get(taskNumber).toString());
             } else {
                 System.err.println("added: " + userInput);
-                savedInput.add(userInput);
+                tasks.add(new Task(userInput));
             }
         } while (!userInput.equals("bye"));
 
