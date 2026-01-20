@@ -16,13 +16,11 @@ public class Ada {
         String userInput;
         ArrayList<Task> tasks = new ArrayList<>();
 
-        do {
+        while (true) {
             userInput = scanner.nextLine();
             if (userInput.equals("list")) {
                 for (int i = 0; i < tasks.size(); i++) {
-                    System.out.println((i + 1) + "."
-                    + "["  + tasks.get(i).getStatusIcon() + "] "
-                    + tasks.get(i).toString());
+                    System.out.println((i + 1) + ". " + tasks.get(i).toString());
                 }
             } else if (userInput.startsWith("mark ")) {
                 int taskNumber = Integer.parseInt(userInput.substring(5)) - 1;
@@ -44,30 +42,38 @@ public class Ada {
                 }
             } else if (userInput.startsWith("todo ")) {
                 String description = userInput.substring(5);
-                System.err.println("added: " + userInput);
                 tasks.add(new Todo(description));
+                System.out.println("Got it. I've added this task:\n"
+                    + tasks.get(tasks.size() - 1).toString() + "\n"
+                    + "Now you have " + tasks.size() + " tasks in the list.");
             } else if (userInput.startsWith("deadline ")) {
                 String[] parts = userInput.substring(9).split(" /by ");
                 if (parts.length == 2) {
-                    System.err.println("added: " + userInput);
                     tasks.add(new Deadline(parts[0], parts[1]));
+                    System.out.println("Got it. I've added this task:\n"
+                        + tasks.get(tasks.size() - 1).toString() + "\n"
+                        + "Now you have " + tasks.size() + " tasks in the list.");
                 } else {
                     System.out.println("Invalid deadline format. Use: deadline <description> /by <time>");
                 }
             } else if (userInput.startsWith("event ")) {
                 String[] parts = userInput.substring(6).split(" /from | /to ");
                 if (parts.length == 3) {
-                    System.err.println("added: " + userInput);
                     tasks.add(new Event(parts[0], parts[1], parts[2]));
+                    System.out.println("Got it. I've added this task:\n"
+                        + tasks.get(tasks.size() - 1).toString() + "\n"
+                        + "Now you have " + tasks.size() + " tasks in the list.");
                 } else {
                     System.out.println("Invalid event format. Use: event <description> /from <start time> /to <end time>");
                 }
+            } else if (userInput.equals("bye")) {
+                break;
             }
             else {
                 System.err.println("added: " + userInput);
                 tasks.add(new Task(userInput));
             }
-        } while (!userInput.equals("bye"));
+        }
 
         
         System.out.println(GoodbyeString);
