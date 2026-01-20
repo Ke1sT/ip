@@ -42,7 +42,28 @@ public class Ada {
                 } else {
                     System.out.println("Invalid task number.");
                 }
-            } else {
+            } else if (userInput.startsWith("todo ")) {
+                String description = userInput.substring(5);
+                System.err.println("added: " + userInput);
+                tasks.add(new Todo(description));
+            } else if (userInput.startsWith("deadline ")) {
+                String[] parts = userInput.substring(9).split(" /by ");
+                if (parts.length == 2) {
+                    System.err.println("added: " + userInput);
+                    tasks.add(new Deadline(parts[0], parts[1]));
+                } else {
+                    System.out.println("Invalid deadline format. Use: deadline <description> /by <time>");
+                }
+            } else if (userInput.startsWith("event ")) {
+                String[] parts = userInput.substring(6).split(" /from | /to ");
+                if (parts.length == 3) {
+                    System.err.println("added: " + userInput);
+                    tasks.add(new Event(parts[0], parts[1], parts[2]));
+                } else {
+                    System.out.println("Invalid event format. Use: event <description> /from <start time> /to <end time>");
+                }
+            }
+            else {
                 System.err.println("added: " + userInput);
                 tasks.add(new Task(userInput));
             }
