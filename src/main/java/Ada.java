@@ -3,15 +3,12 @@ import java.util.Scanner;
 
 public class Ada {
     public static void main(String[] args) {
-        
-        String WelcomeString = "____________________________________________________________\n"
-                + "Hello! I'm Ada\n"
-                + " What can I do for you?\n"
-                + "____________________________________________________________\n";
-        String GoodbyeString = "Bye. Hope to see you again soon!\n"
-                + "____________________________________________________________\n";
-        System.out.println(WelcomeString);
 
+        String WelcomeString = "Hello! I'm Ada\n"
+                + " What can I do for you?\n";
+        String GoodbyeString = "Bye. Hope to see you again soon!\n";
+
+        display(WelcomeString);
         Scanner scanner = new Scanner(System.in);
         String userInput;
         ArrayList<Task> tasks = new ArrayList<>();
@@ -19,81 +16,102 @@ public class Ada {
         while (true) {
             try {
                 userInput = scanner.nextLine();
-                if (userInput.equals("list")) {
+                Command command = Command.valueOf(userInput.split(" ")[0].toUpperCase());
+                if (command == Command.BYE) {
+                    break;
+                }
+
+                switch (command) {
+                case LIST:
                     for (int i = 0; i < tasks.size(); i++) {
-                        System.out.println((i + 1) + ". " + tasks.get(i).toString());
+                        display((i + 1) + ". " + tasks.get(i).toString());
                     }
-                } else if (userInput.startsWith("mark ")) {
+                    break;
+                case MARK: {
                     int taskNumber = Integer.parseInt(userInput.substring(5)) - 1;
                     if (taskNumber >= 0 && taskNumber < tasks.size()) {
                         tasks.get(taskNumber).markAsDone();
-                        System.out.println("Nice! I've marked this task as done:\n");
-                        System.out.println(tasks.get(taskNumber).toString());
+                        display("Nice! I've marked this task as done:\n"
+                                + tasks.get(taskNumber).toString());
                     } else {
                         throw new AdaException("Invalid task number.");
                     }
-                } else if (userInput.startsWith("unmark ")) {
+                    break;
+                }
+                case UNMARK: {
                     int taskNumber = Integer.parseInt(userInput.substring(7)) - 1;
                     if (taskNumber >= 0 && taskNumber < tasks.size()) {
                         tasks.get(taskNumber).unmarkAsDone();
-                        System.out.println("OK, I've marked this task as not done yet:\n");
-                        System.out.println(tasks.get(taskNumber).toString());
+                        display("OK, I've marked this task as not done yet:\n"
+                                + tasks.get(taskNumber).toString());
                     } else {
                         throw new AdaException("Invalid task number.");
                     }
-                } else if (userInput.startsWith("todo ")) {
+                    break;
+                }
+                case TODO:
                     String description = userInput.substring(5);
                     if (description.isEmpty()) {
                         throw new AdaException("The description of a todo cannot be empty.");
                     }
                     tasks.add(new Todo(description));
-                    System.out.println("Got it. I've added this task:\n"
-                        + tasks.get(tasks.size() - 1).toString() + "\n"
-                        + "Now you have " + tasks.size() + " tasks in the list.");
-                } else if (userInput.startsWith("deadline ")) {
+                    display("Got it. I've added this task:\n"
+                            + tasks.get(tasks.size() - 1).toString() + "\n"
+                            + "Now you have " + tasks.size() + " tasks in the list.");
+                    break;
+                case DEADLINE: {
                     String[] parts = userInput.substring(9).split(" /by ");
                     if (parts.length == 2) {
                         tasks.add(new Deadline(parts[0], parts[1]));
-                        System.out.println("Got it. I've added this task:\n"
-                            + tasks.get(tasks.size() - 1).toString() + "\n"
-                            + "Now you have " + tasks.size() + " tasks in the list.");
+                        display("Got it. I've added this task:\n"
+                                + tasks.get(tasks.size() - 1).toString() + "\n"
+                                + "Now you have " + tasks.size() + " tasks in the list.");
                     } else {
                         throw new AdaException("Invalid deadline format. Use: deadline <description> /by <time>");
                     }
-                } else if (userInput.startsWith("event ")) {
+                    break;
+                }
+                case EVENT: {
                     String[] parts = userInput.substring(6).split(" /from | /to ");
                     if (parts.length == 3) {
                         tasks.add(new Event(parts[0], parts[1], parts[2]));
-                        System.out.println("Got it. I've added this task:\n"
-                            + tasks.get(tasks.size() - 1).toString() + "\n"
-                            + "Now you have " + tasks.size() + " tasks in the list.");
+                        display("Got it. I've added this task:\n"
+                                + tasks.get(tasks.size() - 1).toString() + "\n"
+                                + "Now you have " + tasks.size() + " tasks in the list.");
                     } else {
-                        throw new AdaException("Invalid event format. Use: event <description> /from <start time> /to <end time>");
+                        throw new AdaException(
+                                "Invalid event format. Use: event <description> /from <start time> /to <end time>");
                     }
-                } else if (userInput.equals("bye")) {
                     break;
-                } else if (userInput.startsWith("delete ")) {
+                }
+                case DELETE: {
                     int taskNumber = Integer.parseInt(userInput.substring(7)) - 1;
                     if (taskNumber >= 0 && taskNumber < tasks.size()) {
                         Task removedTask = tasks.remove(taskNumber);
-                        System.out.println("Noted. I've removed this task:\n"
-                            + removedTask.toString() + "\n"
-                            + "Now you have " + tasks.size() + " tasks in the list.");
+                        display("Noted. I've removed this task:\n"
+                                + removedTask.toString() + "\n"
+                                + "Now you have " + tasks.size() + " tasks in the list.");
                     } else {
                         throw new AdaException("Invalid task number.");
                     }
+                    break;
                 }
-                else {
+                default:
                     throw new AdaException("I'm sorry, but I don't know what that means.");
                 }
             } catch (AdaException e) {
-                System.out.println("Error: " + e.getMessage());
+                display("Error: " + e.getMessage());
             }
         }
 
-        
-        System.out.println(GoodbyeString);
+        display(GoodbyeString);
         scanner.close();
-        
+
+    }
+
+    static void display(String message) {
+        System.out.println("___________________________________________________________");
+        System.out.println(message);
+        System.out.println("___________________________________________________________");
     }
 }
