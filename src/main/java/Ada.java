@@ -11,15 +11,17 @@ public class Ada {
         String WelcomeString = "Hello! I'm Ada\n"
                 + " What can I do for you?\n";
         String GoodbyeString = "Bye. Hope to see you again soon!\n";
+        File saveFile = new File("./data/ada.txt");
 
         display(WelcomeString);
 
         
         Scanner scanner = new Scanner(System.in);
         String userInput;
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks = loadTasks(saveFile);
 
         while (true) {
+            boolean saveTasks = true;
             try {
                 userInput = scanner.nextLine();
                 Command command = Command.valueOf(userInput.split(" ")[0].toUpperCase());
@@ -32,6 +34,7 @@ public class Ada {
                     for (int i = 0; i < tasks.size(); i++) {
                         display((i + 1) + ". " + tasks.get(i).toString());
                     }
+                    saveTasks = false;
                     break;
                 case MARK: {
                     int taskNumber = Integer.parseInt(userInput.substring(5)) - 1;
@@ -108,6 +111,10 @@ public class Ada {
             } catch (AdaException e) {
                 display("Error: " + e.getMessage());
             }
+            
+            if (saveTasks) {
+                saveTasks(saveFile, tasks);
+            }
         }
 
         display(GoodbyeString);
@@ -169,6 +176,9 @@ public class Ada {
 
     static void saveTasks(File saveFile, ArrayList<Task> tasks) {
         try {
+            if (!saveFile.getParentFile().exists()) {
+                saveFile.getParentFile().mkdirs();
+            }
             FileWriter writer = new FileWriter(saveFile);
             for (Task task : tasks) {
                 writer.write(task.toDataString() + "\n");
