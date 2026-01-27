@@ -1,14 +1,16 @@
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.time.LocalDateTime; 
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class Ada {
     public static void main(String[] args) {
-
-        String WelcomeString = "Hello! I'm Ada\n"
+        String WelcomeString = "Hello! I'm Artificial Directory and Assistant, or Ada\n"
                 + " What can I do for you?\n";
         String GoodbyeString = "Bye. Hope to see you again soon!\n";
         File saveFile = new File("./data/ada.txt");
@@ -71,7 +73,8 @@ public class Ada {
                 case DEADLINE: {
                     String[] parts = userInput.substring(9).split(" /by ");
                     if (parts.length == 2) {
-                        tasks.add(new Deadline(parts[0], parts[1]));
+                        LocalDateTime by = parseDateTime(parts[1]);
+                        tasks.add(new Deadline(parts[0], by));
                         display("Got it. I've added this task:\n"
                                 + tasks.get(tasks.size() - 1).toString() + "\n"
                                 + "Now you have " + tasks.size() + " tasks in the list.");
@@ -83,7 +86,9 @@ public class Ada {
                 case EVENT: {
                     String[] parts = userInput.substring(6).split(" /from | /to ");
                     if (parts.length == 3) {
-                        tasks.add(new Event(parts[0], parts[1], parts[2]));
+                        LocalDateTime from = parseDateTime(parts[1]);
+                        LocalDateTime to = parseDateTime(parts[2]);
+                        tasks.add(new Event(parts[0], from, to));
                         display("Got it. I've added this task:\n"
                                 + tasks.get(tasks.size() - 1).toString() + "\n"
                                 + "Now you have " + tasks.size() + " tasks in the list.");
@@ -145,12 +150,12 @@ public class Ada {
                         task = new Todo(description);
                         break;
                     case "D":
-                        String by = parts[3];
+                        LocalDateTime by = parseDateTime(parts[3]);
                         task = new Deadline(description, by);
                         break;
                     case "E":
-                        String from = parts[3];
-                        String to = parts[4];
+                        LocalDateTime from = parseDateTime(parts[3]);
+                        LocalDateTime to = parseDateTime(parts[4]);
                         task = new Event(description, from, to);
                         break;
                     default:
@@ -189,5 +194,30 @@ public class Ada {
         }
     }
 
-    
+    static LocalDateTime parseDateTime(String dateTimeStr) {
+        String[] patterns = {
+            "yyyy-MM-dd HH:mm",
+            "dd/MM/yyyy HH:mm",
+            "dd-MM-yyyy HH:mm",
+            "yyyy-MM-dd"
+        };
+        LocalDateTime dateTime;
+
+        for (String pattern : patterns) {
+            DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern(pattern);
+            try {
+                if (pattern.equals("yyyy-MM-dd")) {
+                    LocalDate date = LocalDate.parse(dateTimeStr, dateTimeFormat);
+                    dateTime = date.atStartOfDay();
+                    return dateTime;
+                }
+                dateTime = LocalDateTime.parse(dateTimeStr, dateTimeFormat);
+                return dateTime;
+            } catch (DateTimeParseException e) {
+                // Try next pattern
+            }
+        }
+        throw new DateTimeParseException("Invalid date/time format: " + dateTimeStr, dateTimeStr, 0);
+    }
+
 }
