@@ -1,11 +1,15 @@
+package Ada.storage;
+
+import Ada.AdaException;
+import Ada.parser.Parser;
+import Ada.task.*;
+import Ada.ui.Ui;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.Scanner;
 import java.time.LocalDateTime;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 public class Storage {
     File saveFile;
@@ -14,7 +18,7 @@ public class Storage {
         this.saveFile = new File(filepath);
     }
 
-    TaskList load() {
+    public TaskList load() {
         TaskList tasks = new TaskList();
         try {
             Scanner scanner = new Scanner(this.saveFile);
@@ -60,7 +64,7 @@ public class Storage {
         return tasks;
     }
 
-    void save(TaskList tasks) throws AdaException {
+    public void save(TaskList tasks) throws AdaException {
         try {
             if (!this.saveFile.getParentFile().exists()) {
                 this.saveFile.getParentFile().mkdirs();
@@ -74,6 +78,5 @@ public class Storage {
             throw new AdaException("Error saving tasks to file: " + e.getMessage());
         }
     }
-
 
 }
