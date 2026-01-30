@@ -1,3 +1,11 @@
+package Ada;
+import Ada.task.TaskList;
+import Ada.storage.Storage;
+import Ada.ui.Ui;
+import Ada.command.Command;
+import Ada.parser.Parser;
+
+
 public class Ada {
     private Storage storage;
     private Ui ui;
@@ -21,7 +29,7 @@ public class Ada {
                 ui.display("Error: " + e.getMessage());
             }
         }
-
+        this.ui.goodbye();
     }
 
     public static void main(String[] args) {

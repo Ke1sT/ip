@@ -1,3 +1,5 @@
+package Ada.ui;
+
 import java.util.Scanner;
 public class Ui {
     final String WELCOME = "Hello! I'm Artificial Directory and Assistant, or Ada\n"
