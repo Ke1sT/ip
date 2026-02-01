@@ -21,6 +21,10 @@ public class Task {
         this.isDone = false;
     }
 
+    public String getDescription() {
+        return this.description;
+    }
+
     public String toDataString() {
         return (isDone ? "1" : "0") + " | " + description;
     }

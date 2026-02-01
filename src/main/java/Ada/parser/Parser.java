@@ -1,4 +1,5 @@
 package Ada.parser;
+
 import Ada.command.Command;
 import Ada.AdaException;
 import Ada.command.CommandType;
@@ -16,56 +17,56 @@ public class Parser {
             String argumentString = input.substring(type.toString().length()).trim();
 
             switch (type) {
-                case BYE:
-                    return new Command(type, argumentString.split(" "));
-                case LIST:
-                    if (argumentString.isEmpty()) {
-                        return new Command(type, new String[]{});
-                    }
-                    break;
-                case MARK:
-                    if (argumentString.split(" ").length == 1) {
-                        return new Command(type, argumentString.split(" "));
-                    } else {
-                        throw new AdaException("MARK command takes exactly one argument.");
-                    }
-                case UNMARK:
-                    if (argumentString.split(" ").length == 1) {
-                        return new Command(type, argumentString.split(" "));
-                    } else {
-                        throw new AdaException("UNMARK command takes exactly one argument.");
-                    }
-                case DELETE:
-                    if (argumentString.split(" ").length == 1) {
-                        return new Command(type, argumentString.split(" "));
-                    }
-                    throw new AdaException("DELETE command takes exactly one argument.");
-
-                case TODO:
-                    if (argumentString.split(" ").length == 1) {
-                        return new Command(type, argumentString.split(" "));
-                    }
-                    throw new AdaException("TODO command takes exactly one argument.");
-
-                case DEADLINE: {
-                    if (argumentString.matches(".* /by .*")) {
-                        String[] parts = argumentString.split(" /by ");
-                        if (parts.length == 2) {
-                            return new Command(type, parts);
-                        }
-                    }
-                    throw new AdaException("Invalid deadline format. Use: deadline <description> /by <time>");
+            case BYE:
+                return new Command(type, argumentString.split(" "));
+            case LIST:
+                if (argumentString.isEmpty()) {
+                    return new Command(type, new String[]{});
                 }
-
-                case EVENT: {
-                    if (argumentString.matches(".* /from .* /to .*")) {
-                        String[] parts = argumentString.split(" /from | /to ");
+                break;
+            case MARK:
+                if (argumentString.split(" ").length == 1) {
+                    return new Command(type, argumentString.split(" "));
+                } else {
+                    throw new AdaException("MARK command takes exactly one argument.");
+                }
+            case UNMARK:
+                if (argumentString.split(" ").length == 1) {
+                    return new Command(type, argumentString.split(" "));
+                } else {
+                    throw new AdaException("UNMARK command takes exactly one argument.");
+                }
+            case DELETE:
+                if (argumentString.split(" ").length == 1) {
+                    return new Command(type, argumentString.split(" "));
+                }
+                throw new AdaException("DELETE command takes exactly one argument.");
+            case FIND: //allow multiple keywords to be searched
+                return new Command(type, argumentString.split(" "));
+            case TODO:
+                if (argumentString.split(" ").length == 1) {
+                    return new Command(type, argumentString.split(" "));
+                }
+                throw new AdaException("TODO command takes exactly one argument.");
+            case DEADLINE: {
+                if (argumentString.matches(".* /by .*")) {
+                    String[] parts = argumentString.split(" /by ");
+                    if (parts.length == 2) {
                         return new Command(type, parts);
                     }
-                    throw new AdaException("Invalid event format. Use: event <description> /from <start time> /to <end time>");
                 }
-                default:
-                    throw new AdaException("Unknown command type.");
+                throw new AdaException("Invalid deadline format. Use: deadline <description> /by <time>");
+            }
+
+            case EVENT: {
+                if (argumentString.matches(".* /from .* /to .*")) {
+                    String[] parts = argumentString.split(" /from | /to ");
+                    return new Command(type, parts);
+                }
+                throw new AdaException("Invalid event format. Use: event <description> /from <start time> /to <end time>");
+            }
+            default:
+                throw new AdaException("Unknown command type.");
 
             }
         } catch (IllegalArgumentException e) {

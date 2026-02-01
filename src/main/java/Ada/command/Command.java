@@ -89,6 +89,31 @@ public class Command {
                 }
                 break;
             }
+        case FIND: {
+            saveFile = false;
+            if (this.arguments[0].isEmpty()) {
+                throw new AdaException("Please provide at least one keyword");
+            }
+            boolean taskMatch[] = new boolean[tasks.size()];
+
+            for (int i = 0; i < tasks.size(); i++) {
+                for (String keyword : this.arguments) {
+                    if (tasks.get(i).getDescription().contains(keyword)) {
+                        taskMatch[i] = true;
+                        continue;
+                    }
+                }
+            }
+
+            String matches = "";
+            for (int i = 0; i<tasks.size(); i++) {
+                if (taskMatch[i]) {
+                    matches = matches.concat(tasks.get(i).toString()) + "\n";
+                }
+            }
+            ui.display("Here are the matching tasks in your list:\n" + matches);
+            break;
+        }
             case TODO:
                 String description = this.arguments[0];
                 if (description.isEmpty()) {
@@ -120,7 +145,7 @@ public class Command {
                             + tasks.get(tasks.size() - 1).toString() + "\n"
                             + "Now you have " + tasks.size() + " tasks in the list.");
                 } catch (Exception e) {
-                    throw new AdaException("Please etner valid dates in the format yyyy-MM-dd [HH:mm]");
+                    throw new AdaException("Please enter valid dates in the format yyyy-MM-dd [HH:mm]");
                 }
                 break;
             }
