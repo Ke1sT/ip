@@ -45,20 +45,20 @@ public class Storage {
 
                 Task task;
                 switch (taskType) {
-                    case "T":
-                        task = new Todo(description);
-                        break;
-                    case "D":
-                        LocalDateTime by = Parser.parseDateTime(parts[3]);
-                        task = new Deadline(description, by);
-                        break;
-                    case "E":
-                        LocalDateTime from = Parser.parseDateTime(parts[3]);
-                        LocalDateTime to = Parser.parseDateTime(parts[4]);
-                        task = new Event(description, from, to);
-                        break;
-                    default:
-                        throw new AdaException("Unknown task type in file.");
+                case "T":
+                    task = new Todo(description);
+                    break;
+                case "D":
+                    LocalDateTime by = Parser.parseDateTime(parts[3]);
+                    task = new Deadline(description, by);
+                    break;
+                case "E":
+                    LocalDateTime from = Parser.parseDateTime(parts[3]);
+                    LocalDateTime to = Parser.parseDateTime(parts[4]);
+                    task = new Event(description, from, to);
+                    break;
+                default:
+                    throw new AdaException("Unknown task type in file.");
                 }
 
                 if (isDone) {
@@ -66,11 +66,10 @@ public class Storage {
                 }
                 tasks.add(task);
             }
-        } catch(FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             Ui.display("No existing task file found. Starting with an empty task list.");
             return tasks;
-        }
-        catch (AdaException e) {
+        } catch (AdaException e) {
             // Handle exceptions during loading
             Ui.display("Error: " + e.getMessage() + "\nStarting with an empty task list.");
             return tasks;
