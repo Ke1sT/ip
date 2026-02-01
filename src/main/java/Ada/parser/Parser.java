@@ -8,8 +8,19 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Parses raw user input into {@code Command} objects and converts
+ * date/time strings into {@code LocalDateTime} values.
+ */
 public class Parser {
 
+    /**
+     * Parses a raw input line into a {@code Command}.
+     *
+     * @param input full user input line
+     * @return parsed command ready to execute
+     * @throws AdaException if the command type or arguments are invalid
+     */
     public static Command parse(String input) throws AdaException {
         try {
             CommandType type = CommandType.valueOf(input.split(" ")[0].toUpperCase());
@@ -77,6 +88,15 @@ public class Parser {
         throw new AdaException("Unknown command type.");
     }
 
+    /**
+     * Parses a date/time string using supported patterns.
+     * Accepts "yyyy-MM-dd HH:mm", "dd/MM/yyyy HH:mm", "dd-MM-yyyy HH:mm",
+     * and "yyyy-MM-dd" (date only, treated as midnight).
+     *
+     * @param dateTimeStr input date/time text
+     * @return parsed {@code LocalDateTime}; midnight when only a date is provided
+     * @throws DateTimeParseException if none of the patterns match
+     */
     public static LocalDateTime parseDateTime(String dateTimeStr) {
         String[] patterns = {
                 "yyyy-MM-dd HH:mm",

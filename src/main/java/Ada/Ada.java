@@ -5,18 +5,30 @@ import Ada.ui.Ui;
 import Ada.command.Command;
 import Ada.parser.Parser;
 
-
+/**
+ * Main application that manages tasks with persistent storage and a console UI.
+ * Coordinates parsing user commands and executing operations until exit.
+ */
 public class Ada {
     private Storage storage;
     private Ui ui;
     private TaskList tasks;
 
+    /**
+     * Constructs an Ada instance backed by a storage file.
+     *
+     * @param filepath path to the save file used by storage
+     */
     public Ada(String filepath) {
         this.storage = new Storage(filepath);
         tasks = storage.load();
         this.ui = new Ui();
     }
 
+    /**
+     * Runs the main interaction loop: reads commands, executes them,
+     * persists changes when needed, and terminates when exit is requested.
+     */
     public void run() {
         boolean isExit = false;
         while (!isExit) {
@@ -32,6 +44,11 @@ public class Ada {
         this.ui.goodbye();
     }
 
+    /**
+     * Program entry point.
+     *
+     * @param args CLI arguments;
+     */
     public static void main(String[] args) {
         new Ada("./data/ada.txt").run();
     }

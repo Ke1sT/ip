@@ -8,21 +8,45 @@ import Ada.ui.Ui;
 
 import java.time.LocalDateTime;
 
+/**
+ * Represents a parsed user command and provides execution logic
+ * against a {@code TaskList}, {@code Ui}, and {@code Storage}.
+ */
 public class Command {
     private CommandType type;
     private boolean isExit;
     private String[] arguments;
 
+    /**
+     * Creates a command of a given type with its arguments.
+     *
+     * @param type      command type
+     * @param arguments parsed arguments for the command
+     */
     public Command(CommandType type, String[] arguments) {
         this.type = type;
         this.arguments = arguments;
         this.isExit = (type == CommandType.BYE);
     }
 
+    /**
+     * Returns whether this command terminates the application.
+     *
+     * @return {@code true} if the command is {@code BYE}; {@code false} otherwise
+     */
     public boolean isExit() {
         return this.isExit;
     }
 
+    /**
+     * Executes this command against the provided components. May mutate
+     * the task list and persist changes via storage.
+     *
+     * @param tasks   task list to operate on
+     * @param ui      UI for user interaction
+     * @param storage storage used to load/save tasks
+     * @throws AdaException if input is invalid or operation fails
+     */
     public void execute(TaskList tasks, Ui ui, Storage storage) throws AdaException {
         boolean saveFile = true;
         switch (type) {
