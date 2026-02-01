@@ -1,6 +1,14 @@
 package Ada.task;
 
+/**
+ * A simple task without any associated dates.
+ */
 public class Todo extends Task {
+    /**
+     * Creates a todo task.
+     *
+     * @param description task description
+     */
     public Todo(String description) {
         super(description);
     }

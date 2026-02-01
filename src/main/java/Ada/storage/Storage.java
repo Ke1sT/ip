@@ -11,13 +11,27 @@ import java.io.FileWriter;
 import java.util.Scanner;
 import java.time.LocalDateTime;
 
+/**
+ * Handles loading and saving tasks to a file for persistence.
+ */
 public class Storage {
     File saveFile;
 
+    /**
+     * Creates a storage bound to the given file path.
+     *
+     * @param filepath path to the save file
+     */
     public Storage(String filepath) {
         this.saveFile = new File(filepath);
     }
 
+    /**
+     * Loads tasks from the backing file.
+     *
+     * @return a {@code TaskList} populated from the file; empty list when the
+     *         file is missing or when errors occur
+     */
     public TaskList load() {
         TaskList tasks = new TaskList();
         try {
@@ -64,6 +78,12 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Saves all tasks to the backing file, creating parent directories if needed.
+     *
+     * @param tasks task list to persist
+     * @throws AdaException if writing to the file fails
+     */
     public void save(TaskList tasks) throws AdaException {
         try {
             if (!this.saveFile.getParentFile().exists()) {
