@@ -52,7 +52,8 @@ public class Parser {
                     return new Command(type, argumentString.split(" "));
                 }
                 throw new AdaException("DELETE command takes exactly one argument.");
-
+            case FIND: //allow multiple keywords to be searched
+                return new Command(type, argumentString.split(" "));
             case TODO:
                 if (argumentString.split(" ").length == 1) {
                     return new Command(type, argumentString.split(" "));

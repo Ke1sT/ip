@@ -40,6 +40,10 @@ public class Task {
         this.isDone = false;
     }
 
+    public String getDescription() {
+        return this.description;
+    }
+
     /**
      * Returns the serialized core fields used by storage.
      *
