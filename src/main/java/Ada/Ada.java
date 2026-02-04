@@ -1,10 +1,10 @@
 package Ada;
 
-import Ada.task.TaskList;
-import Ada.storage.Storage;
-import Ada.ui.Ui;
 import Ada.command.Command;
 import Ada.parser.Parser;
+import Ada.storage.Storage;
+import Ada.task.TaskList;
+import Ada.ui.Ui;
 
 /**
  * Main application that manages tasks with persistent storage and a console UI.

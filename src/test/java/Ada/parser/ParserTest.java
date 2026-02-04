@@ -1,22 +1,17 @@
 package Ada.parser;
 
-import Ada.AdaException;
-import Ada.command.Command;
-import Ada.command.CommandType;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
-import org.junit.jupiter.api.Assumptions;
-
-import java.time.DateTimeException;
-import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import Ada.AdaException;
 
 public class ParserTest {
 
     @Test
-    void parse_event_invalid_format() {
+    void invalid_date_format() {
         try {
             Parser.parse("event meeting /from 09:00 to 10:00");
 

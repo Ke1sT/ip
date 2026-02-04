@@ -1,21 +1,25 @@
 package Ada.command;
 
+import java.time.LocalDateTime;
+
 import Ada.AdaException;
 import Ada.parser.Parser;
 import Ada.storage.Storage;
-import Ada.task.*;
+import Ada.task.Deadline;
+import Ada.task.Event;
+import Ada.task.Task;
+import Ada.task.TaskList;
+import Ada.task.Todo;
 import Ada.ui.Ui;
-
-import java.time.LocalDateTime;
 
 /**
  * Represents a parsed user command and provides execution logic
  * against a {@code TaskList}, {@code Ui}, and {@code Storage}.
  */
 public class Command {
-    private CommandType type;
-    private boolean isExit;
-    private String[] arguments;
+    private final CommandType type;
+    private final boolean isExit;
+    private final String[] arguments;
 
     /**
      * Creates a command of a given type with its arguments.
@@ -58,7 +62,7 @@ public class Command {
             for (int i = 0; i < tasks.size(); i++) {
                 listing = listing.concat(((i + 1) + ". " + tasks.get(i).toString()) + "\n");
             }
-            ui.display(listing);
+            Ui.display(listing);
             saveFile = false;
             break;
         case MARK: {
@@ -66,7 +70,7 @@ public class Command {
                 int taskNumber = Integer.parseInt(this.arguments[0]) - 1;
                 if (taskNumber >= 0 && taskNumber < tasks.size()) {
                     tasks.get(taskNumber).markAsDone();
-                    ui.display("Nice! I've marked this task as done:\n"
+                    Ui.display("Nice! I've marked this task as done:\n"
                             + tasks.get(taskNumber).toString());
                 } else {
                     throw new AdaException("Invalid task number.");
@@ -83,7 +87,7 @@ public class Command {
                 int taskNumber = Integer.parseInt(this.arguments[0]) - 1;
                 if (taskNumber >= 0 && taskNumber < tasks.size()) {
                     tasks.get(taskNumber).unmarkAsDone();
-                    ui.display("OK, I've marked this task as not done yet:\n"
+                    Ui.display("OK, I've marked this task as not done yet:\n"
                             + tasks.get(taskNumber).toString());
                 } else {
                     throw new AdaException("Invalid task number.");
@@ -100,7 +104,7 @@ public class Command {
                 int taskNumber = Integer.parseInt(this.arguments[0]) - 1;
                 if (taskNumber >= 0 && taskNumber < tasks.size()) {
                     Task removedTask = tasks.delete(taskNumber);
-                    ui.display("Noted. I've removed this task:\n"
+                    Ui.display("Noted. I've removed this task:\n"
                             + removedTask.toString() + "\n"
                             + "Now you have " + tasks.size() + " tasks in the list.");
                 } else {
@@ -118,7 +122,7 @@ public class Command {
             if (this.arguments[0].isEmpty()) {
                 throw new AdaException("Please provide at least one keyword");
             }
-            boolean taskMatch[] = new boolean[tasks.size()];
+            boolean[] taskMatch = new boolean[tasks.size()];
 
             for (int i = 0; i < tasks.size(); i++) {
                 for (String keyword : this.arguments) {
@@ -135,7 +139,7 @@ public class Command {
                     matches = matches.concat(tasks.get(i).toString()) + "\n";
                 }
             }
-            ui.display("Here are the matching tasks in your list:\n" + matches);
+            Ui.display("Here are the matching tasks in your list:\n" + matches);
             break;
         }
         case TODO:
@@ -144,7 +148,7 @@ public class Command {
                 throw new AdaException("The description of a todo cannot be empty.");
             }
             tasks.add(new Todo(description));
-            ui.display("Got it. I've added this task:\n"
+            Ui.display("Got it. I've added this task:\n"
                     + tasks.get(tasks.size() - 1).toString() + "\n"
                     + "Now you have " + tasks.size() + " tasks in the list.");
             break;
@@ -152,7 +156,7 @@ public class Command {
             try {
                 LocalDateTime by = Parser.parseDateTime(this.arguments[1]);
                 tasks.add(new Deadline(this.arguments[0], by));
-                ui.display("Got it. I've added this task:\n"
+                Ui.display("Got it. I've added this task:\n"
                         + tasks.get(tasks.size() - 1).toString() + "\n"
                         + "Now you have " + tasks.size() + " tasks in the list.");
             } catch (Exception e) {
@@ -165,7 +169,7 @@ public class Command {
                 LocalDateTime from = Parser.parseDateTime(this.arguments[1]);
                 LocalDateTime to = Parser.parseDateTime(this.arguments[2]);
                 tasks.add(new Event(this.arguments[0], from, to));
-                ui.display("Got it. I've added this task:\n"
+                Ui.display("Got it. I've added this task:\n"
                         + tasks.get(tasks.size() - 1).toString() + "\n"
                         + "Now you have " + tasks.size() + " tasks in the list.");
             } catch (Exception e) {

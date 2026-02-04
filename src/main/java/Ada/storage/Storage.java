@@ -1,21 +1,25 @@
 package Ada.storage;
 
-import Ada.AdaException;
-import Ada.parser.Parser;
-import Ada.task.*;
-import Ada.ui.Ui;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.util.Scanner;
 import java.time.LocalDateTime;
+import java.util.Scanner;
+
+import Ada.AdaException;
+import Ada.parser.Parser;
+import Ada.task.Deadline;
+import Ada.task.Event;
+import Ada.task.Task;
+import Ada.task.TaskList;
+import Ada.task.Todo;
+import Ada.ui.Ui;
 
 /**
  * Handles loading and saving tasks to a file for persistence.
  */
 public class Storage {
-    File saveFile;
+    private File saveFile;
 
     /**
      * Creates a storage bound to the given file path.
@@ -97,5 +101,4 @@ public class Storage {
             throw new AdaException("Error saving tasks to file: " + e.getMessage());
         }
     }
-
 }

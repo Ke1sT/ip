@@ -1,13 +1,13 @@
 package Ada.parser;
 
-import Ada.command.Command;
-import Ada.AdaException;
-import Ada.command.CommandType;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+
+import Ada.AdaException;
+import Ada.command.Command;
+import Ada.command.CommandType;
 
 /**
  * Parses raw user input into {@code Command} objects and converts
@@ -75,7 +75,8 @@ public class Parser {
                     String[] parts = argumentString.split(" /from | /to ");
                     return new Command(type, parts);
                 }
-                throw new AdaException("Invalid event format. Use: event <description> /from <start time> /to <end time>");
+                throw new AdaException("Invalid event format. "
+                        + "Use: event <description> /from <start time> /to <end time>");
             }
             default:
                 throw new AdaException("Unknown command type.");
@@ -101,10 +102,10 @@ public class Parser {
      */
     public static LocalDateTime parseDateTime(String dateTimeStr) {
         String[] patterns = {
-                "yyyy-MM-dd HH:mm",
-                "dd/MM/yyyy HH:mm",
-                "dd-MM-yyyy HH:mm",
-                "yyyy-MM-dd"
+            "yyyy-MM-dd HH:mm",
+            "dd/MM/yyyy HH:mm",
+            "dd-MM-yyyy HH:mm",
+            "yyyy-MM-dd"
         };
         LocalDateTime dateTime;
 

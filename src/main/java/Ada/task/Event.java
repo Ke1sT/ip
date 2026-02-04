@@ -10,7 +10,7 @@ public class Event extends Task {
 
     protected LocalDateTime from;
     protected LocalDateTime to;
-    DateTimeFormatter DATETIMEFORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     /**
      * Creates an event task.
@@ -28,8 +28,8 @@ public class Event extends Task {
     @Override
     public String toDataString() {
         return "E | " + super.toDataString()
-                + " | " + from.format(DATETIMEFORMAT)
-                + " | " + to.format(DATETIMEFORMAT);
+                + " | " + from.format(dateTimeFormat)
+                + " | " + to.format(dateTimeFormat);
     }
 
     @Override

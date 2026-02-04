@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 public class Deadline extends Task {
 
     protected LocalDateTime by;
-    DateTimeFormatter DATETIMEFORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     /**
      * Creates a deadline task.
@@ -24,7 +24,7 @@ public class Deadline extends Task {
 
     @Override
     public String toDataString() {
-        return "D | " + super.toDataString() + " | " + by.format(DATETIMEFORMAT);
+        return "D | " + super.toDataString() + " | " + by.format(dateTimeFormat);
     }
 
     @Override
