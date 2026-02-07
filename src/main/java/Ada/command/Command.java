@@ -51,26 +51,23 @@ public class Command {
      * @param storage storage used to load/save tasks
      * @throws AdaException if input is invalid or operation fails
      */
-    public void execute(TaskList tasks, Ui ui, Storage storage) throws AdaException {
-        boolean saveFile = true;
+    public String execute(TaskList tasks, Ui ui, Storage storage) throws AdaException {
         switch (type) {
         case BYE:
-            saveFile = false;
             break;
         case LIST:
             String listing = "";
             for (int i = 0; i < tasks.size(); i++) {
                 listing = listing.concat(((i + 1) + ". " + tasks.get(i).toString()) + "\n");
             }
-            Ui.display(listing);
-            saveFile = false;
-            break;
+            return listing;
         case MARK: {
             try {
                 int taskNumber = Integer.parseInt(this.arguments[0]) - 1;
                 if (taskNumber >= 0 && taskNumber < tasks.size()) {
                     tasks.get(taskNumber).markAsDone();
-                    Ui.display("Nice! I've marked this task as done:\n"
+                    storage.save(tasks);
+                    return ("Nice! I've marked this task as done:\n"
                             + tasks.get(taskNumber).toString());
                 } else {
                     throw new AdaException("Invalid task number.");
@@ -80,14 +77,14 @@ public class Command {
             } catch (NumberFormatException e) {
                 throw new AdaException("Please enter a valid task number");
             }
-            break;
         }
         case UNMARK: {
             try {
                 int taskNumber = Integer.parseInt(this.arguments[0]) - 1;
                 if (taskNumber >= 0 && taskNumber < tasks.size()) {
                     tasks.get(taskNumber).unmarkAsDone();
-                    Ui.display("OK, I've marked this task as not done yet:\n"
+                    storage.save(tasks);
+                    return ("OK, I've marked this task as not done yet:\n"
                             + tasks.get(taskNumber).toString());
                 } else {
                     throw new AdaException("Invalid task number.");
@@ -97,14 +94,14 @@ public class Command {
             } catch (NumberFormatException e) {
                 throw new AdaException("Please enter a valid task number");
             }
-            break;
         }
         case DELETE: {
             try {
                 int taskNumber = Integer.parseInt(this.arguments[0]) - 1;
                 if (taskNumber >= 0 && taskNumber < tasks.size()) {
                     Task removedTask = tasks.delete(taskNumber);
-                    Ui.display("Noted. I've removed this task:\n"
+                    storage.save(tasks);
+                    return ("Noted. I've removed this task:\n"
                             + removedTask.toString() + "\n"
                             + "Now you have " + tasks.size() + " tasks in the list.");
                 } else {
@@ -115,10 +112,8 @@ public class Command {
             } catch (NumberFormatException e) {
                 throw new AdaException("Please enter a valid task number");
             }
-            break;
         }
         case FIND: {
-            saveFile = false;
             if (this.arguments[0].isEmpty()) {
                 throw new AdaException("Please provide at least one keyword");
             }
@@ -139,8 +134,7 @@ public class Command {
                     matches = matches.concat(tasks.get(i).toString()) + "\n";
                 }
             }
-            Ui.display("Here are the matching tasks in your list:\n" + matches);
-            break;
+            return ("Here are the matching tasks in your list:\n" + matches);
         }
         case TODO:
             String description = this.arguments[0];
@@ -148,41 +142,39 @@ public class Command {
                 throw new AdaException("The description of a todo cannot be empty.");
             }
             tasks.add(new Todo(description));
-            Ui.display("Got it. I've added this task:\n"
+            storage.save(tasks);
+            return ("Got it. I've added this task:\n"
                     + tasks.get(tasks.size() - 1).toString() + "\n"
                     + "Now you have " + tasks.size() + " tasks in the list.");
-            break;
         case DEADLINE: {
             try {
                 LocalDateTime by = Parser.parseDateTime(this.arguments[1]);
                 tasks.add(new Deadline(this.arguments[0], by));
-                Ui.display("Got it. I've added this task:\n"
+                storage.save(tasks);
+                return ("Got it. I've added this task:\n"
                         + tasks.get(tasks.size() - 1).toString() + "\n"
                         + "Now you have " + tasks.size() + " tasks in the list.");
             } catch (Exception e) {
                 throw new AdaException("Please enter valid dates in the format yyyy-MM-dd [HH:mm]");
             }
-            break;
         }
         case EVENT: {
             try {
                 LocalDateTime from = Parser.parseDateTime(this.arguments[1]);
                 LocalDateTime to = Parser.parseDateTime(this.arguments[2]);
                 tasks.add(new Event(this.arguments[0], from, to));
-                Ui.display("Got it. I've added this task:\n"
+                storage.save(tasks);
+                return ("Got it. I've added this task:\n"
                         + tasks.get(tasks.size() - 1).toString() + "\n"
                         + "Now you have " + tasks.size() + " tasks in the list.");
             } catch (Exception e) {
                 throw new AdaException("Please enter valid dates in the format yyyy-MM-dd [HH:mm]");
             }
-            break;
         }
         default:
             throw new AdaException("I'm sorry, but I don't know what that means.");
         }
-        if (saveFile) {
-            storage.save(tasks);
-        }
 
+        return "Unknown Error. Failed to execute command";
     }
 }

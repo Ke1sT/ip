@@ -36,7 +36,7 @@ public class Storage {
      * @return a {@code TaskList} populated from the file; empty list when the
      *         file is missing or when errors occur
      */
-    public TaskList load() {
+    public TaskList load() throws AdaException {
         TaskList tasks = new TaskList();
         try {
             Scanner scanner = new Scanner(this.saveFile);
@@ -71,12 +71,7 @@ public class Storage {
                 tasks.add(task);
             }
         } catch (FileNotFoundException e) {
-            Ui.display("No existing task file found. Starting with an empty task list.");
-            return tasks;
-        } catch (AdaException e) {
-            // Handle exceptions during loading
-            Ui.display("Error: " + e.getMessage() + "\nStarting with an empty task list.");
-            return tasks;
+            throw new AdaException("No existing task file found.");
         }
         return tasks;
     }
