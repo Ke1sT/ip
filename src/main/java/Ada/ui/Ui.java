@@ -5,11 +5,10 @@ import java.util.Scanner;
  * Handles user interaction: displays messages and reads commands.
  */
 public class Ui {
-    final String WELCOME = "Hello! I'm Artificial Directory and Assistant, or Ada\n"
+    static final String WELCOME = "Hello! I'm Artificial Directory and Assistant, or Ada\n"
             + " What can I do for you?\n";
-    final String GOODBYE = "Bye. Hope to see you again soon!\n";
+    static final String GOODBYE = "Bye. Hope to see you again soon!\n";
     private final Scanner scanner;
-    
     /**
      * Constructs a UI, displays the welcome banner, and prepares input.
      */
@@ -33,7 +32,6 @@ public class Ui {
     public void goodbye() {
         display(GOODBYE);
     }
-    
     /**
      * Displays a bordered message to standard output.
      *

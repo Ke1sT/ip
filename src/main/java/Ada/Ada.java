@@ -13,7 +13,8 @@ import Ada.ui.Ui;
 public class Ada {
     private Storage storage;
     private Ui ui;
-    private TaskList tasks;
+    private TaskList tasks = new TaskList();
+    private boolean isExit = false;
 
     /**
      * Constructs an Ada instance backed by a storage file.
@@ -22,7 +23,6 @@ public class Ada {
      */
     public Ada(String filepath) {
         this.storage = new Storage(filepath);
-        tasks = storage.load();
         this.ui = new Ui();
     }
 
@@ -46,12 +46,35 @@ public class Ada {
     }
 
     /**
-     * Program entry point.
-     *
-     * @param args CLI arguments;
+     * Generates a response for the user's chat message.
      */
-    public static void main(String[] args) {
-        new Ada("./data/ada.txt").run();
+    public String getResponse(String input) {
+        try {
+            Command c = Parser.parse(input);
+            this.isExit = c.isExit();
+            return c.execute(this.tasks, this.ui, this.storage);
+        } catch (AdaException e) {
+            return "Error: " + e.getMessage();
+        }
     }
 
+    /**
+     * Retrieves taskslist from storage
+     */
+    public String getTasks() {
+        try {
+            this.tasks = storage.load();
+            return "Successfully loaded task list";
+        } catch (AdaException e) {
+            return "Error: " + e.getMessage() + " Starting with empty task list";
+        }
+    }
+
+    /**
+     * Returns value of isExit.
+     */
+    public boolean isExit() {
+        return this.isExit;
+    }
 }
+
