@@ -117,42 +117,28 @@ public class Command {
             if (this.arguments[0].isEmpty()) {
                 throw new AdaException("Please provide at least one keyword");
             }
-            boolean[] taskMatch = new boolean[tasks.size()];
-
-            for (int i = 0; i < tasks.size(); i++) {
-                for (String keyword : this.arguments) {
-                    if (tasks.get(i).getDescription().contains(keyword)) {
-                        taskMatch[i] = true;
-                        continue;
-                    }
-                }
-            }
-
-            String matches = "";
-            for (int i = 0; i < tasks.size(); i++) {
-                if (taskMatch[i]) {
-                    matches = matches.concat(tasks.get(i).toString()) + "\n";
-                }
-            }
-            return ("Here are the matching tasks in your list:\n" + matches);
+            TaskList matchingTasks = tasks.findMatchingTasks(this.arguments);
+            return ("Here are the matching tasks in your list:\n" + matchingTasks.toString());
         }
         case TODO:
             String description = this.arguments[0];
             if (description.isEmpty()) {
                 throw new AdaException("The description of a todo cannot be empty.");
             }
-            tasks.add(new Todo(description));
+            Todo newTodo = new Todo(description);
+            tasks.add(newTodo);
             storage.save(tasks);
             return ("Got it. I've added this task:\n"
-                    + tasks.get(tasks.size() - 1).toString() + "\n"
+                    + newTodo.toString() + "\n"
                     + "Now you have " + tasks.size() + " tasks in the list.");
         case DEADLINE: {
             try {
                 LocalDateTime by = Parser.parseDateTime(this.arguments[1]);
-                tasks.add(new Deadline(this.arguments[0], by));
+                Deadline newDeadline = new Deadline(this.arguments[0], by);
+                tasks.add(newDeadline);
                 storage.save(tasks);
                 return ("Got it. I've added this task:\n"
-                        + tasks.get(tasks.size() - 1).toString() + "\n"
+                        + newDeadline.toString() + "\n"
                         + "Now you have " + tasks.size() + " tasks in the list.");
             } catch (Exception e) {
                 throw new AdaException("Please enter valid dates in the format yyyy-MM-dd [HH:mm]");
@@ -162,10 +148,11 @@ public class Command {
             try {
                 LocalDateTime from = Parser.parseDateTime(this.arguments[1]);
                 LocalDateTime to = Parser.parseDateTime(this.arguments[2]);
-                tasks.add(new Event(this.arguments[0], from, to));
+                Event newEvent = new Event(this.arguments[0], from, to);
+                tasks.add(newEvent);
                 storage.save(tasks);
                 return ("Got it. I've added this task:\n"
-                        + tasks.get(tasks.size() - 1).toString() + "\n"
+                        + newEvent.toString() + "\n"
                         + "Now you have " + tasks.size() + " tasks in the list.");
             } catch (Exception e) {
                 throw new AdaException("Please enter valid dates in the format yyyy-MM-dd [HH:mm]");
