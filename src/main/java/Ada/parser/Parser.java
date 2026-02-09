@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.stream.Stream;
 
 import Ada.AdaException;
 import Ada.command.Command;
@@ -107,9 +108,10 @@ public class Parser {
             "dd-MM-yyyy HH:mm",
             "yyyy-MM-dd"
         };
-        LocalDateTime dateTime;
 
-        for (String pattern : patterns) {
+
+        Stream.of(patterns).map(pattern -> {
+            LocalDateTime dateTime;
             DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern(pattern);
             try {
                 if (pattern.equals("yyyy-MM-dd")) {
@@ -120,9 +122,14 @@ public class Parser {
                 dateTime = LocalDateTime.parse(dateTimeStr, dateTimeFormat);
                 return dateTime;
             } catch (DateTimeParseException e) {
-                // Try next pattern
+                return null;
             }
-        }
+        })
+            .filter(dt -> dt != null)
+            .findFirst()
+            .orElseThrow(() -> new DateTimeParseException(
+                "Invalid date/time format: " + dateTimeStr, dateTimeStr, 0));
+
         throw new DateTimeParseException("Invalid date/time format: " + dateTimeStr, dateTimeStr, 0);
     }
 
