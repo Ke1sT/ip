@@ -13,7 +13,6 @@ import Ada.task.Event;
 import Ada.task.Task;
 import Ada.task.TaskList;
 import Ada.task.Todo;
-import Ada.ui.Ui;
 
 /**
  * Handles loading and saving tasks to a file for persistence.
