@@ -141,16 +141,20 @@ public class Command {
             if (description.isEmpty()) {
                 throw new AdaException("The description of a todo cannot be empty.");
             }
-            tasks.add(new Todo(description));
+            Todo newTodo = new Todo(description);
+            tasks.add(newTodo);
             storage.save(tasks);
+            assert tasks.get(tasks.size() - 1) == newTodo : "The last task in the list should be the newly added todo.";
             return ("Got it. I've added this task:\n"
                     + tasks.get(tasks.size() - 1).toString() + "\n"
                     + "Now you have " + tasks.size() + " tasks in the list.");
         case DEADLINE: {
             try {
                 LocalDateTime by = Parser.parseDateTime(this.arguments[1]);
-                tasks.add(new Deadline(this.arguments[0], by));
+                Deadline newDeadline = new Deadline(this.arguments[0], by);
+                tasks.add(newDeadline);
                 storage.save(tasks);
+                assert tasks.get(tasks.size() - 1) == newDeadline : "The last task in the list should be the newly added deadline.";
                 return ("Got it. I've added this task:\n"
                         + tasks.get(tasks.size() - 1).toString() + "\n"
                         + "Now you have " + tasks.size() + " tasks in the list.");
@@ -162,7 +166,9 @@ public class Command {
             try {
                 LocalDateTime from = Parser.parseDateTime(this.arguments[1]);
                 LocalDateTime to = Parser.parseDateTime(this.arguments[2]);
-                tasks.add(new Event(this.arguments[0], from, to));
+                Event newEvent = new Event(this.arguments[0], from, to);
+                tasks.add(newEvent);
+                assert tasks.get(tasks.size() - 1) == newEvent : "The last task in the list should be the newly added event.";
                 storage.save(tasks);
                 return ("Got it. I've added this task:\n"
                         + tasks.get(tasks.size() - 1).toString() + "\n"
