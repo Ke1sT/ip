@@ -117,24 +117,8 @@ public class Command {
             if (this.arguments[0].isEmpty()) {
                 throw new AdaException("Please provide at least one keyword");
             }
-            boolean[] taskMatch = new boolean[tasks.size()];
-
-            for (int i = 0; i < tasks.size(); i++) {
-                for (String keyword : this.arguments) {
-                    if (tasks.get(i).getDescription().contains(keyword)) {
-                        taskMatch[i] = true;
-                        continue;
-                    }
-                }
-            }
-
-            String matches = "";
-            for (int i = 0; i < tasks.size(); i++) {
-                if (taskMatch[i]) {
-                    matches = matches.concat(tasks.get(i).toString()) + "\n";
-                }
-            }
-            return ("Here are the matching tasks in your list:\n" + matches);
+            TaskList matchingTasks = tasks.findMatchingTasks(this.arguments);
+            return ("Here are the matching tasks in your list:\n" + matchingTasks.toString());
         }
         case TODO:
             String description = this.arguments[0];
@@ -146,7 +130,7 @@ public class Command {
             storage.save(tasks);
             assert tasks.get(tasks.size() - 1) == newTodo : "The last task in the list should be the newly added todo.";
             return ("Got it. I've added this task:\n"
-                    + tasks.get(tasks.size() - 1).toString() + "\n"
+                    + newTodo.toString() + "\n"
                     + "Now you have " + tasks.size() + " tasks in the list.");
         case DEADLINE: {
             try {
@@ -156,7 +140,7 @@ public class Command {
                 storage.save(tasks);
                 assert tasks.get(tasks.size() - 1) == newDeadline : "The last task in the list should be the newly added deadline.";
                 return ("Got it. I've added this task:\n"
-                        + tasks.get(tasks.size() - 1).toString() + "\n"
+                        + newDeadline.toString() + "\n"
                         + "Now you have " + tasks.size() + " tasks in the list.");
             } catch (Exception e) {
                 throw new AdaException("Please enter valid dates in the format yyyy-MM-dd [HH:mm]");
@@ -171,7 +155,7 @@ public class Command {
                 assert tasks.get(tasks.size() - 1) == newEvent : "The last task in the list should be the newly added event.";
                 storage.save(tasks);
                 return ("Got it. I've added this task:\n"
-                        + tasks.get(tasks.size() - 1).toString() + "\n"
+                        + newEvent.toString() + "\n"
                         + "Now you have " + tasks.size() + " tasks in the list.");
             } catch (Exception e) {
                 throw new AdaException("Please enter valid dates in the format yyyy-MM-dd [HH:mm]");

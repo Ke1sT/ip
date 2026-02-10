@@ -2,6 +2,8 @@ package Ada.task;
 
 import java.util.ArrayList;
 
+import sun.util.resources.Bundles;
+
 /**
  * Mutable collection of tasks with basic operations.
  */
@@ -54,6 +56,19 @@ public class TaskList {
         return this.tasks.size();
     }
 
+    public TaskList findMatchingTasks(String[] arguments) {
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        for (String keyword : arguments) {
+            for (Task task : this.tasks) {
+                if (task.getDescription().contains(keyword) && !matchingTasks.contains(task)) {
+                    matchingTasks.add(task);
+                }
+            }
+        }
+
+        return new TaskList(matchingTasks);
+    }
+
     /**
      * Removes and returns the task at the given index.
      *
@@ -64,5 +79,14 @@ public class TaskList {
     public Task delete(int index) {
         assert index >= 0 && index < size() : "index " + index + " out of bounds";
         return this.tasks.remove(index);
+    }
+
+    @Override
+    public String toString() {
+        String listing = "";
+        for (int i = 0; i < this.tasks.size(); i++) {
+            listing += (i + 1) + ". " + this.tasks.get(i).toString() + "\n";
+        }
+        return listing.trim();
     }
 }
