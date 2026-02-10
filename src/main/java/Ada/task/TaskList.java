@@ -43,6 +43,7 @@ public class TaskList {
      * @throws IndexOutOfBoundsException if index is out of range
      */
     public Task get(int index) {
+        assert index >= 0 && index < size() : "index " + index + " out of bounds";
         return this.tasks.get(index);
     }
 
@@ -76,6 +77,7 @@ public class TaskList {
      * @throws IndexOutOfBoundsException if index is out of range
      */
     public Task delete(int index) {
+        assert index >= 0 && index < size() : "index " + index + " out of bounds";
         return this.tasks.remove(index);
     }
 
