@@ -138,7 +138,8 @@ public class Command {
                 Deadline newDeadline = new Deadline(this.arguments[0], by);
                 tasks.add(newDeadline);
                 storage.save(tasks);
-                assert tasks.get(tasks.size() - 1) == newDeadline : "The last task in the list should be the newly added deadline.";
+                assert tasks.get(tasks.size() - 1) == newDeadline
+                        : "The last task in the list should be the newly added deadline.";
                 return ("Got it. I've added this task:\n"
                         + newDeadline.toString() + "\n"
                         + "Now you have " + tasks.size() + " tasks in the list.");
@@ -152,7 +153,8 @@ public class Command {
                 LocalDateTime to = Parser.parseDateTime(this.arguments[2]);
                 Event newEvent = new Event(this.arguments[0], from, to);
                 tasks.add(newEvent);
-                assert tasks.get(tasks.size() - 1) == newEvent : "The last task in the list should be the newly added event.";
+                assert tasks.get(tasks.size() - 1) == newEvent
+                        : "The last task in the list should be the newly added event.";
                 storage.save(tasks);
                 return ("Got it. I've added this task:\n"
                         + newEvent.toString() + "\n"

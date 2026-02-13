@@ -2,8 +2,6 @@ package Ada.task;
 
 import java.util.ArrayList;
 
-import sun.util.resources.Bundles;
-
 /**
  * Mutable collection of tasks with basic operations.
  */
@@ -56,6 +54,11 @@ public class TaskList {
         return this.tasks.size();
     }
 
+    /**
+     * Searches for and returns a new TaskList containing any matches to a list of given keyword
+     * @param arguments list of keywords to find in the TaskList
+     * @return TaskList containing matching tasks
+     */
     public TaskList findMatchingTasks(String[] arguments) {
         ArrayList<Task> matchingTasks = new ArrayList<>();
         for (String keyword : arguments) {

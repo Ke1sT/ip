@@ -110,7 +110,7 @@ public class Parser {
         };
 
 
-        Stream.of(patterns).map(pattern -> {
+        return Stream.of(patterns).map(pattern -> {
             LocalDateTime dateTime;
             DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern(pattern);
             try {
@@ -129,8 +129,6 @@ public class Parser {
             .findFirst()
             .orElseThrow(() -> new DateTimeParseException(
                 "Invalid date/time format: " + dateTimeStr, dateTimeStr, 0));
-
-        throw new DateTimeParseException("Invalid date/time format: " + dateTimeStr, dateTimeStr, 0);
     }
 
 }
