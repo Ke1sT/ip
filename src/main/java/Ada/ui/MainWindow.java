@@ -1,5 +1,7 @@
 package Ada.ui;
 
+import java.io.File;
+
 import Ada.Ada;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -14,9 +16,10 @@ import javafx.scene.layout.VBox;
  * Controller for the main GUI.
  */
 public class MainWindow extends AnchorPane {
-    static final String WELCOME_STRING = "Hello! I'm Artificial Directory and Assistant, or Ada\n"
-            + " What can I do for you?\n";
+    static final String WELCOME_STRING = "Hello! I'm Artificial Directory and Assistant, or Ada\n";
     static final String GOODBYE = "Bye. Hope to see you again soon!\n";
+    static final String DATA_PROMPT = "Enter data file path or press Enter to use default:\n";
+    static final String DEFAULT_DATA_PATH = "./data/ada.txt";
     @FXML
     private ScrollPane scrollPane;
     @FXML
@@ -27,6 +30,7 @@ public class MainWindow extends AnchorPane {
     private Button sendButton;
 
     private Ada ada;
+    private boolean awaitingDataPath = true;
 
     private Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
     private Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/DaDuke.png"));
@@ -40,13 +44,15 @@ public class MainWindow extends AnchorPane {
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
         dialogContainer.getChildren().addAll(
-            DialogBox.getAdaDialog(WELCOME_STRING, dukeImage)
+            DialogBox.getAdaDialog(WELCOME_STRING, dukeImage),
+            DialogBox.getAdaDialog(DATA_PROMPT, dukeImage)
         );
     }
 
-    /** Injects the Duke instance */
+    /** Injects the chatbot instance */
     public void setAda(Ada d) {
         ada = d;
+        this.awaitingDataPath = false;
         String output = ada.getTasks();
         dialogContainer.getChildren().addAll(
                 DialogBox.getAdaDialog(output, dukeImage)
@@ -60,6 +66,11 @@ public class MainWindow extends AnchorPane {
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
+        if (this.awaitingDataPath) {
+            getDataPath();
+            this.awaitingDataPath = false;
+            return;
+        }
         String response = ada.getResponse(input);
         if (ada.isExit()) {
             dialogContainer.getChildren().add(DialogBox.getAdaDialog(GOODBYE, dukeImage));
@@ -70,5 +81,45 @@ public class MainWindow extends AnchorPane {
                 DialogBox.getAdaDialog(response, dukeImage)
         );
         userInput.clear();
+    }
+
+    private boolean isValidDataFilePath(String path) {
+        if (path.isBlank()) {
+            return false;
+        }
+        File file = new File(path);
+        if (file.isDirectory()) {
+            return false;
+        }
+        File parent = file.getParentFile();
+        if (parent == null) {
+            return true;
+        }
+        return parent.exists() || parent.mkdirs();
+    }
+
+    void getDataPath() {
+        String dataFileinput = userInput.getText().trim();
+        boolean isValid = isValidDataFilePath(dataFileinput);
+        String dataFilePath = isValid ? dataFileinput : DEFAULT_DATA_PATH;
+        String statusMessage = buildDataPathMessage(dataFileinput, isValid, dataFilePath);
+        ada = new Ada(dataFilePath);
+        this.awaitingDataPath = false;
+        dialogContainer.getChildren().addAll(
+                DialogBox.getUserDialog(dataFileinput.isEmpty() ? "(default)" : dataFileinput, userImage),
+                DialogBox.getAdaDialog(statusMessage, dukeImage),
+                DialogBox.getAdaDialog(ada.getTasks(), dukeImage)
+        );
+        userInput.clear();
+    }
+
+    private String buildDataPathMessage(String input, boolean isValid, String dataFilePath) {
+        if (input.isBlank()) {
+            return "Using default data file: " + DEFAULT_DATA_PATH;
+        }
+        if (!isValid) {
+            return "Invalid file path. Using default data file: " + DEFAULT_DATA_PATH;
+        }
+        return "Using data file: " + dataFilePath;
     }
 }
