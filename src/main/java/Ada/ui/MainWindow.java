@@ -1,6 +1,7 @@
 package Ada.ui;
 
 import java.io.File;
+import java.io.IOException;
 
 import Ada.Ada;
 import javafx.application.Platform;
@@ -76,6 +77,15 @@ public class MainWindow extends AnchorPane {
             dialogContainer.getChildren().add(DialogBox.getAdaDialog(GOODBYE, dukeImage));
             Platform.exit(); // shuts down the JavaFX application
         }
+
+        if (ada.isError()) {
+            dialogContainer.getChildren().addAll(
+                    DialogBox.getUserDialog(input, userImage),
+                    DialogBox.getAdaErrorDialog(response, dukeImage)
+            );
+            userInput.clear();
+            return;
+        }
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
                 DialogBox.getAdaDialog(response, dukeImage)
@@ -87,15 +97,23 @@ public class MainWindow extends AnchorPane {
         if (path.isBlank()) {
             return false;
         }
+        if (!path.endsWith(".txt")) {
+            return false;
+        }
         File file = new File(path);
         if (file.isDirectory()) {
             return false;
         }
         File parent = file.getParentFile();
-        if (parent == null) {
-            return true;
+        if (parent != null) {
+            parent.mkdirs();
         }
-        return parent.exists() || parent.mkdirs();
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
     }
 
     void getDataPath() {

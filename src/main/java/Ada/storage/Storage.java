@@ -71,6 +71,8 @@ public class Storage {
             }
         } catch (FileNotFoundException e) {
             throw new AdaException("No existing task file found.");
+        } catch (Exception e) {
+            throw new AdaException("Could not read data" + "\n Warning: File could be overwritten.");
         }
         return tasks;
     }

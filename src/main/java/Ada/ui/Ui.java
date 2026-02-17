@@ -13,7 +13,6 @@ public class Ui {
      * Constructs a UI, displays the welcome banner, and prepares input.
      */
     public Ui() {
-        display(WELCOME);
         this.scanner = new Scanner(System.in);
     }
 

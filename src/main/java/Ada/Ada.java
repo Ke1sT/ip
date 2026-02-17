@@ -15,6 +15,7 @@ public class Ada {
     private Ui ui;
     private TaskList tasks = new TaskList();
     private boolean isExit = false;
+    private boolean isError = false;
 
     /**
      * Constructs an Ada instance backed by a storage file.
@@ -49,11 +50,14 @@ public class Ada {
      * Generates a response for the user's chat message.
      */
     public String getResponse(String input) {
+        this.isError = false;
+
         try {
             Command c = Parser.parse(input);
             this.isExit = c.isExit();
             return c.execute(this.tasks, this.ui, this.storage);
         } catch (AdaException e) {
+            this.isError = true;
             return "Error: " + e.getMessage();
         }
     }
@@ -62,10 +66,13 @@ public class Ada {
      * Retrieves taskslist from storage
      */
     public String getTasks() {
+        this.isError = false;
+
         try {
             this.tasks = storage.load();
             return "Successfully loaded task list";
         } catch (AdaException e) {
+            this.isError = true;
             return "Error: " + e.getMessage() + " Starting with empty task list";
         }
     }
@@ -75,6 +82,13 @@ public class Ada {
      */
     public boolean isExit() {
         return this.isExit;
+    }
+
+    /**
+     * Returns value of isError.
+     */
+    public boolean isError() {
+        return this.isError;
     }
 }
 
