@@ -2,6 +2,7 @@ package Ada.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +17,7 @@ public class ParserTest {
     void invalid_date_format() {
         try {
             Parser.parse("event meeting /from 09:00 to 10:00");
-
+            fail();
         } catch (AdaException e) {
             //expected exception due to invalid date format
         }
@@ -26,7 +27,7 @@ public class ParserTest {
     void parse_unknown_command() {
         try {
             Parser.parse("test 123");
-
+            fail();
         } catch (AdaException e) {
             //expected exception due to unknown command
         }
@@ -54,7 +55,7 @@ public class ParserTest {
             Command test = Parser.parse("BYE");
             assertTrue(test.isExit());
         } catch (AdaException e) {
-            return;
+            fail();
         }
 
     }
