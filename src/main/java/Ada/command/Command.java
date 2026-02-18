@@ -10,7 +10,6 @@ import Ada.task.Event;
 import Ada.task.Task;
 import Ada.task.TaskList;
 import Ada.task.Todo;
-import Ada.ui.Ui;
 
 /**
  * Represents a parsed user command and provides execution logic
@@ -47,11 +46,10 @@ public class Command {
      * the task list and persist changes via storage.
      *
      * @param tasks   task list to operate on
-     * @param ui      UI for user interaction
      * @param storage storage used to load/save tasks
      * @throws AdaException if input is invalid or operation fails
      */
-    public String execute(TaskList tasks, Ui ui, Storage storage) throws AdaException {
+    public String execute(TaskList tasks, Storage storage) throws AdaException {
         switch (type) {
         case BYE:
             break;

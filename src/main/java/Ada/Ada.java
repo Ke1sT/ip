@@ -4,7 +4,6 @@ import Ada.command.Command;
 import Ada.parser.Parser;
 import Ada.storage.Storage;
 import Ada.task.TaskList;
-import Ada.ui.Ui;
 
 /**
  * Main application that manages tasks with persistent storage and a console UI.
@@ -12,7 +11,6 @@ import Ada.ui.Ui;
  */
 public class Ada {
     private Storage storage;
-    private Ui ui;
     private TaskList tasks = new TaskList();
     private boolean isExit = false;
     private boolean isError = false;
@@ -24,26 +22,6 @@ public class Ada {
      */
     public Ada(String filepath) {
         this.storage = new Storage(filepath);
-        this.ui = new Ui();
-    }
-
-    /**
-     * Runs the main interaction loop: reads commands, executes them,
-     * persists changes when needed, and terminates when exit is requested.
-     */
-    public void run() {
-        boolean isExit = false;
-        while (!isExit) {
-            try {
-                String fullCommand = ui.readCommand();
-                Command c = Parser.parse(fullCommand);
-                c.execute(this.tasks, this.ui, this.storage);
-                isExit = c.isExit();
-            } catch (AdaException e) {
-                ui.display("Error: " + e.getMessage());
-            }
-        }
-        this.ui.goodbye();
     }
 
     /**
@@ -55,7 +33,7 @@ public class Ada {
         try {
             Command c = Parser.parse(input);
             this.isExit = c.isExit();
-            return c.execute(this.tasks, this.ui, this.storage);
+            return c.execute(this.tasks, this.storage);
         } catch (AdaException e) {
             this.isError = true;
             return "Error: " + e.getMessage();
