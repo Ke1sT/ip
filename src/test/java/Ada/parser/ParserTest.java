@@ -1,12 +1,14 @@
 package Ada.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
 import Ada.AdaException;
+import Ada.command.Command;
 
 public class ParserTest {
 
@@ -44,6 +46,17 @@ public class ParserTest {
         // Date-only should be start of day
         LocalDateTime dt4 = Parser.parseDateTime("2025-01-31");
         assertEquals(LocalDateTime.of(2025, 1, 31, 0, 0), dt4);
+    }
+
+    @Test
+    void checkByeCommand() {
+        try {
+            Command test = Parser.parse("BYE");
+            assertTrue(test.isExit());
+        } catch (AdaException e) {
+            return;
+        }
+
     }
 
 }
