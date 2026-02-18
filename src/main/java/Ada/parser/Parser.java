@@ -56,10 +56,10 @@ public class Parser {
             case FIND: //allow multiple keywords to be searched
                 return new Command(type, argumentString.split(" "));
             case TODO:
-                if (argumentString.split(" ").length == 1) {
-                    return new Command(type, argumentString.split(" "));
+                if (!argumentString.isEmpty()) {
+                    return new Command(type, new String[]{argumentString});
                 }
-                throw new AdaException("TODO command takes exactly one argument.");
+                throw new AdaException("TODO command takes at least one argument.");
 
             case DEADLINE: {
                 if (argumentString.matches(".* /by .*")) {

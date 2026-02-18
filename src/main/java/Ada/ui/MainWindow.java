@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import Ada.Ada;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 /**
  * Controller for the main GUI.
@@ -74,8 +76,15 @@ public class MainWindow extends AnchorPane {
         }
         String response = ada.getResponse(input);
         if (ada.isExit()) {
-            dialogContainer.getChildren().add(DialogBox.getAdaDialog(GOODBYE, dukeImage));
-            Platform.exit(); // shuts down the JavaFX application
+            dialogContainer.getChildren().addAll(
+                    DialogBox.getUserDialog(input, userImage),
+                    DialogBox.getAdaDialog(GOODBYE, dukeImage)
+            );
+
+            PauseTransition delay = new PauseTransition(Duration.seconds(1));
+            delay.setOnFinished(event -> Platform.exit()); //shuts down javafx application
+            delay.play();
+            return;
         }
 
         if (ada.isError()) {
