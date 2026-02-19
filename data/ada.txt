@@ -1,3 +1,4 @@
-D | 1 | finish phase four | 2025-02-01 00:00
-E | 0 | ficsmas celebrations | 2025-12-01 00:00 | 2025-12-31 00:00
-T | 0 | place electricity poles
+T | 0 | place power poles
+E | 1 | ficsmas celebrations | 2025-12-01 00:00 | 2025-12-31 00:00
+D | 1 | finish phase two | 2026-01-21 00:00
+T | 1 | set up transport route
