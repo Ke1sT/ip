@@ -35,8 +35,8 @@ public class MainWindow extends AnchorPane {
     private Ada ada;
     private boolean awaitingDataPath = true;
 
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/pioneer.png"));
-    private Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/ada.png"));
+    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/Pioneer.png"));
+    private Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/Ada.png"));
 
 
     /**
